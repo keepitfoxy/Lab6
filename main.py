@@ -31,11 +31,16 @@ def load_json(file_path):
 
 def validate_json(data, schema):
     try:
-        validate(instance=data, schema=schema)
+        validate(instance=data, schema)
         print("JSON jest poprawny.")
     except jsonschema.exceptions.ValidationError as err:
         print("Błąd walidacji JSON:", err)
         raise
+
+def save_json(data, file_path):
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+    print(f"Dane zapisane do pliku {file_path}")
 
 def main():
     args = parse_arguments()
@@ -56,6 +61,9 @@ def main():
             "required": ["name", "age"]
         }
         validate_json(data, schema)
+    
+    if args.output_file.endswith('.json'):
+        save_json(data, args.output_file)
 
 if __name__ == "__main__":
     main()
